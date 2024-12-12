@@ -10,8 +10,8 @@ using TodoApplikasjonAPIEntityDelTre.Data;
 namespace TodoApplikasjonAPIEntityDelTre.Migrations
 {
     [DbContext(typeof(TodoDbContext))]
-    [Migration("20241203143914_UpdateTodoModel")]
-    partial class UpdateTodoModel
+    [Migration("20241212194656_MakeCategoryNullableInTodos")]
+    partial class MakeCategoryNullableInTodos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,10 +19,41 @@ namespace TodoApplikasjonAPIEntityDelTre.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
+            modelBuilder.Entity("TodoApplikasjonAPIEntityDelTre.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Health"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Leisure"
+                        });
+                });
+
             modelBuilder.Entity("TodoApplikasjonAPIEntityDelTre.Models.Todo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
@@ -39,12 +70,15 @@ namespace TodoApplikasjonAPIEntityDelTre.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Todos");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
+                            CategoryId = 1,
                             Description = "Call the clinic and book a time for the dental check-up",
                             IsCompleted = false,
                             Title = "Schedule dentist appointment"
@@ -52,10 +86,27 @@ namespace TodoApplikasjonAPIEntityDelTre.Migrations
                         new
                         {
                             Id = 2,
+                            CategoryId = 2,
                             Description = "Research trails and prepare gear for a Saturday hike",
-                            IsCompleted = false,
+                            IsCompleted = true,
                             Title = "Plan weekend hike"
                         });
+                });
+
+            modelBuilder.Entity("TodoApplikasjonAPIEntityDelTre.Models.Todo", b =>
+                {
+                    b.HasOne("TodoApplikasjonAPIEntityDelTre.Models.Category", "Category")
+                        .WithMany("Todos")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("TodoApplikasjonAPIEntityDelTre.Models.Category", b =>
+                {
+                    b.Navigation("Todos");
                 });
 #pragma warning restore 612, 618
         }

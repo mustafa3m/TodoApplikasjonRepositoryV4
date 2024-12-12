@@ -22,16 +22,28 @@ namespace TodoApplikasjonAPIEntityDelTre.Services
         
 
         public Todo FindTodoById(int id) => _context.Todos.Find(id);
-        
+
+
+        //public void AddNewTodo(Todo todo)
+        //{
+        //    _context.Todos.Add(todo);
+        //    _context.SaveChanges();
+
+        //}
 
         public void AddNewTodo(Todo todo)
         {
-            _context.Todos.Add(todo);
-            _context.SaveChanges();
+            if (todo == null)
+            {
+                throw new ArgumentNullException(nameof(todo), "Todo cannot be null.");
+            }
 
+            _context.Todos.Add(todo);  // Add the new Todo to the database
+            _context.SaveChanges();    // Save the changes to the database
         }
 
-        
+
+
 
         public void ModifyTodo(int id, Todo updatedNewTodo)
         {

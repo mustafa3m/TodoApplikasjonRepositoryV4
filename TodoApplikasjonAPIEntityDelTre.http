@@ -1,4 +1,4 @@
-@TodoApplikasjonAPIEntityDelTre_HostAddress = http://localhost:5084
+dotnet ef database update@TodoApplikasjonAPIEntityDelTre_HostAddress = http://localhost:5084
 
 GET {{TodoApplikasjonAPIEntityDelTre_HostAddress}}/weatherforecast/
 Accept: application/json

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace TodoApplikasjonAPIEntityDelTre.Models
@@ -19,6 +20,11 @@ namespace TodoApplikasjonAPIEntityDelTre.Models
 
         [Required(ErrorMessage = "IsCompleted is required.")]
         public bool IsCompleted { get; set; } = false;
+
+        [ForeignKey("Category")]
+        public int CategoryId { get; set; }// Foreign key
+        [System.Text.Json.Serialization.JsonIgnore] // Prevents serialization of the full Category object
+        public Category? Category { get; set; }
     }
 
 
