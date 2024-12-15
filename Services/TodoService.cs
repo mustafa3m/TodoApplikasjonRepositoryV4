@@ -6,6 +6,7 @@ using TodoApplikasjonAPIEntityDelTre.Models;
 using TodoApplikasjonAPIEntityDelTre.Data;
 using TodoApplikasjonAPIEntityDelTre.Services;
 using TodoApplikasjonAPIEntityDelTre.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace TodoApplikasjonAPIEntityDelTre.Services
 {
@@ -66,6 +67,32 @@ namespace TodoApplikasjonAPIEntityDelTre.Services
             
 
         }
+
+
+        //////
+        ///
+        // New method to retrieve tasks by category
+        public List<Todo> GetTodosByCategory(int categoryId)
+        {
+            return _todoDataRepository.GetTodosByCategory(categoryId).ToList();
+        }
+
+        // New method to count tasks by category
+        public int GetTodoCountByCategory(int categoryId)
+        {
+            return _todoDataRepository.GetTodoCountByCategory(categoryId);
+        }
+
+        // New method to retrieve completed tasks with their categories
+        public List<Todo> GetCompletedTodosWithCategory()
+        {
+            return _todoDataRepository.GetCompletedTodosWithCategory().ToList();
+        }
+
+
+
+
+
     }
 }
 

@@ -13,14 +13,17 @@ namespace TodoApplikasjonAPIEntityDelTre.Services
         
 
         private readonly ICategoryDataRepository _categoryDataRepository;
-       
 
-        public CategoryService(CategoryDataRepository categoryDataRepository)
+
+        public CategoryService(ICategoryDataRepository categoryDataRepository)
         {
             _categoryDataRepository = categoryDataRepository;
         }
 
+       
+
         public List<Category> FetchAllCategories() => _categoryDataRepository.GetAllCategories().ToList();
+
 
         public Category FindCategoryById(int id) => _categoryDataRepository.GetCategoryById(id);
 
@@ -39,11 +42,11 @@ namespace TodoApplikasjonAPIEntityDelTre.Services
             if (existingCategory != null)
             {
                 existingCategory.Name = updatedCategory.Name;
-                _categoryDataRepository.UpdateCategory( existingCategory);
-                
+                _categoryDataRepository.UpdateCategory(existingCategory);
+
             }
 
-            
+
         }
 
         public void RemoveCategory(int id)

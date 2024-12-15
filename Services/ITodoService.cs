@@ -19,6 +19,13 @@ namespace TodoApplikasjonAPIEntityDelTre.Services
 
         // Removes a todo item by its ID
         void RemoveTodo(int id);
+
+        // New methods for category-based operations
+        List<Todo> GetTodosByCategory(int categoryId);
+        int GetTodoCountByCategory(int categoryId);
+        List<Todo> GetCompletedTodosWithCategory();
+
+
     }
 
 

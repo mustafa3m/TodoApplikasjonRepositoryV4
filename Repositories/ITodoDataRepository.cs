@@ -10,6 +10,11 @@ namespace TodoApplikasjonAPIEntityDelTre.Repositories
         void AddTodo(Todo todo);
         void UpdateTodo(Todo todo);
         void DeleteTodo(int id);
+
+        // New methods for advanced filtering
+        IQueryable<Todo> GetTodosByCategory(int categoryId);
+        int GetTodoCountByCategory(int categoryId);
+        IQueryable<Todo> GetCompletedTodosWithCategory();
     }
 
 }

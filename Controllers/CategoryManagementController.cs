@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TodoApplikasjonAPIEntityDelTre.Models;
 using TodoApplikasjonAPIEntityDelTre.Services;
+using TodoApplikasjonAPIEntityDelTre.Repositories;
 
 namespace TodoApplikasjonAPIEntityDelTre.Controllers
 {
@@ -53,7 +54,7 @@ namespace TodoApplikasjonAPIEntityDelTre.Controllers
 
 
 
-        
+
 
         [HttpPut("{id}")]
         public IActionResult UpdateCategory(int id, [FromBody] Category category)
@@ -61,7 +62,7 @@ namespace TodoApplikasjonAPIEntityDelTre.Controllers
             if (id != category.Id)
                 return BadRequest();
 
-            _CategoryService.ModifyCategory(id,category);
+            _CategoryService.ModifyCategory(id, category);
             return NoContent();
         }
 

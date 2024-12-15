@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApplikasjonAPIEntityDelTre.Models;
 using TodoApplikasjonAPIEntityDelTre.Services;
+using TodoApplikasjonAPIEntityDelTre.Repositories;
 
 namespace TodoApplikasjonAPIEntityDelTre.Controllers
 {
@@ -17,15 +18,18 @@ namespace TodoApplikasjonAPIEntityDelTre.Controllers
             _todoService = todoService;
         }
 
-        /// <summary>
-        /// Fetch all Todos.
-        /// </summary>
+        ///// <summary>
+        ///// Fetch all Todos.
+        ///// </summary>
         [HttpGet]
         public IActionResult GetAllTodos()
         {
             var todos = _todoService.FetchAllTodos();
             return Ok(todos);
+            
         }
+
+
 
         /// <summary>
         /// Fetch a specific Todo by ID.
@@ -48,30 +52,33 @@ namespace TodoApplikasjonAPIEntityDelTre.Controllers
         /// </summary>
         /// <param name="todo">The Todo item to create.</param>
         [HttpPost]
-        public IActionResult CreateTodo([FromBody] Todo todo)
+        public IActionResult CreateTodo(Todo todo)
         {
-            // Check if the provided Todo object is null
-            if (todo == null)
-            {
-                return BadRequest("The Todo object cannot be null.");
-            }
 
-            // Validate the model state
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            _todoService.AddNewTodo(todo);
+            return CreatedAtAction(nameof(GetTodoById), new { id = todo.Id }, todo);
+            //// Check if the provided Todo object is null
+            //if (todo == null)
+            //{
+            //    return BadRequest("The Todo object cannot be null.");
+            //}
 
-            try
-            {
-                _todoService.AddNewTodo(todo);
-                return CreatedAtAction(nameof(GetTodoById), new { id = todo.Id }, todo);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error adding Todo: {ex.Message}");
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
+            //// Validate the model state
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
+
+            //try
+            //{
+            //    _todoService.AddNewTodo(todo);
+            //    return CreatedAtAction(nameof(GetTodoById), new { id = todo.Id }, todo);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine($"Error adding Todo: {ex.Message}");
+            //    return StatusCode(500, "An error occurred while processing your request.");
+            //}
         }
 
         /// <summary>
@@ -125,6 +132,35 @@ namespace TodoApplikasjonAPIEntityDelTre.Controllers
                 Console.WriteLine($"Error deleting Todo: {ex.Message}");
                 return StatusCode(500, "An error occurred while processing your request.");
             }
+        }
+
+
+        // GET: api/todos/category/{categoryId}
+        [HttpGet("category/{categoryId}")]
+        public ActionResult<List<Todo>> GetTodosByCategory(int categoryId)
+        {
+            var todos = _todoService.GetTodosByCategory(categoryId);
+            if (todos == null || !todos.Any())
+            {
+                return NotFound("No todos found in this category");
+            }
+            return Ok(todos);
+        }
+
+        // GET: api/todos/count/category/{categoryId}
+        [HttpGet("count/category/{categoryId}")]
+        public ActionResult<int> GetTodoCountByCategory(int categoryId)
+        {
+            int count = _todoService.GetTodoCountByCategory(categoryId);
+            return Ok(count);
+        }
+
+        // GET: api/todos/completed
+        [HttpGet("completed")]
+        public ActionResult<List<Todo>> GetCompletedTodosWithCategory()
+        {
+            var todos = _todoService.GetCompletedTodosWithCategory();
+            return Ok(todos);
         }
     }
 }
