@@ -44,8 +44,9 @@ namespace TodoApplikasjonAPIEntityDelTre.Data
 
             builder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Health" },
-                new Category { Id = 2, Name = "Leisure" }
-           
+                new Category { Id = 2, Name = "Leisure" },
+                 new Category { Id = 3, Name = "Bil" }
+
 
             );
 

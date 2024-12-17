@@ -18,16 +18,39 @@ namespace TodoApplikasjonAPIEntityDelTre.Repositories
             _context = context;
         }
 
-
         public IQueryable<Todo> GetAllTodos()
         {
-            return _context.Todos
-               .Include(t => t.Category);
+            // Return the Todo with its associated Category
+            var todos = _context.Todos
+                .Include(t => t.Category)  // Load the associated category
+                .Select(t => new Todo
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    Description = t.Description,
+                    IsCompleted = t.IsCompleted,
+                    CategoryId = t.CategoryId,
+                    Category = new Category
+                    {
+                        Id = t.Category.Id,
+                        Name = t.Category.Name
+                    }
+                });
 
-            //return _context.Todos.ToList();
-
-            //.Include(t => t.Category); 
+            return todos;
         }
+
+
+
+
+        //public IQueryable<Todo> GetAllTodos()
+        //{
+        //    return _context.Todos
+        //       .Include(t => t.Category)
+        //       .ThenInclude(c => c.Todos);
+
+
+        //}
         public void AddTodo(Todo todo)
         {
                 if (todo == null)
@@ -41,48 +64,6 @@ namespace TodoApplikasjonAPIEntityDelTre.Repositories
 
         }
 
-
-
-        //public void AddTodo(Todo todo)
-        //{
-        //    // Check if the 'todo' object is null
-        //    if (todo == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(todo), "Todo cannot be null.");
-        //    }
-
-        //    // Check if the Title is provided (non-null and not empty)
-        //    if (string.IsNullOrWhiteSpace(todo.Title))
-        //    {
-        //        throw new ArgumentException("Title cannot be null or empty.");
-        //    }
-
-        //    // Check if the CategoryId is valid (assuming it must be a positive integer)
-        //    if (todo.CategoryId <= 0)
-        //    {
-        //        throw new ArgumentException("CategoryId must be a positive integer.");
-        //    }
-
-        //    // Check if the Description does not exceed a maximum length (optional validation)
-        //    if (todo.Description?.Length > 500) // Assuming 500 characters max for Description
-        //    {
-        //        throw new ArgumentException("Description cannot exceed 500 characters.");
-        //    }
-
-        //    // Add the validated Todo object to the database
-        //    _context.Todos.Add(todo);
-
-        //    try
-        //    {
-        //        // Save changes to persist the Todo object in the database
-        //        _context.SaveChanges();
-        //    }
-        //    catch (DbUpdateException ex)
-        //    {
-        //        // Handle any database-specific errors
-        //        throw new InvalidOperationException("An error occurred while saving the Todo.", ex);
-        //    }
-        //}
 
 
 

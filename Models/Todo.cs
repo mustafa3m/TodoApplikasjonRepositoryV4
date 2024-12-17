@@ -23,7 +23,7 @@ namespace TodoApplikasjonAPIEntityDelTre.Models
 
         [ForeignKey("Category")]
         public int CategoryId { get; set; }// Foreign key
-        [System.Text.Json.Serialization.JsonIgnore] // Prevents serialization of the full Category object
+        //[System.Text.Json.Serialization.JsonIgnore] // Prevents serialization of the full Category object
         public Category? Category { get; set; }
     }
 
