@@ -74,7 +74,9 @@ namespace TodoApplikasjonAPIEntityDelTre.Services
         // New method to retrieve tasks by category
         public List<Todo> GetTodosByCategory(int categoryId)
         {
-            return _todoDataRepository.GetTodosByCategory(categoryId).ToList();
+            return _todoDataRepository.GetTodosByCategory(categoryId)
+                .Include(t => t.Category)
+                .ToList();
         }
 
         // New method to count tasks by category
@@ -86,7 +88,9 @@ namespace TodoApplikasjonAPIEntityDelTre.Services
         // New method to retrieve completed tasks with their categories
         public List<Todo> GetCompletedTodosWithCategory()
         {
-            return _todoDataRepository.GetCompletedTodosWithCategory().ToList();
+            return _todoDataRepository.GetCompletedTodosWithCategory()
+                .Include(t => t.Category)
+                .ToList();
         }
 
 
