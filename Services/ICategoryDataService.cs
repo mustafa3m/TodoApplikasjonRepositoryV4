@@ -2,7 +2,7 @@
 
 namespace TodoApplikasjonAPIEntityDelTre.Services
 {
-    public interface ICategoryService
+    public interface ICategoryDataService
     {
         // Fetches all categories
         List<Category> FetchAllCategories();
@@ -18,6 +18,8 @@ namespace TodoApplikasjonAPIEntityDelTre.Services
 
         // Removes a category by its ID
         void RemoveCategory(int id);
+
+        
     }
 }
 

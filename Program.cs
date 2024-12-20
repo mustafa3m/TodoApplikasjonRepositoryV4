@@ -12,8 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+//kommnetaire english // norsk
 builder.Services.AddScoped<ITodoService, TodoService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICategoryDataService, CategoryDataService>();
 builder.Services.AddScoped<ITodoDataRepository, TodoDataRepository>();
 builder.Services.AddScoped<ICategoryDataRepository, CategoryDataRepository>();
 

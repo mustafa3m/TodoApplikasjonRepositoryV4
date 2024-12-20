@@ -1,17 +1,13 @@
-﻿using TodoApplikasjonAPIEntityDelTre.Data;
-using TodoApplikasjonAPIEntityDelTre.Models;
+﻿using TodoApplikasjonAPIEntityDelTre.Models;
 using TodoApplikasjonAPIEntityDelTre.Data;
 using Microsoft.EntityFrameworkCore;
 using TodoApplikasjonAPIEntityDelTre.Repositories;
-
-
-
 
 namespace TodoApplikasjonAPIEntityDelTre.Repositories
 {
     public class TodoDataRepository : ITodoDataRepository
     {
-        private readonly TodoDbContext _context; 
+        private readonly TodoDbContext _context;
 
         public TodoDataRepository(TodoDbContext context)
         {
@@ -20,48 +16,37 @@ namespace TodoApplikasjonAPIEntityDelTre.Repositories
 
         public IQueryable<Todo> GetAllTodos()
         {
-            // Return the Todo with its associated Category
-            var todos = _context.Todos
-                .Include(t => t.Category)  // Load the associated category
-                .Select(t => new Todo
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    Description = t.Description,
-                    IsCompleted = t.IsCompleted,
-                    CategoryId = t.CategoryId,
-                    Category = new Category
-                    {
-                        Id = t.Category.Id,
-                        Name = t.Category.Name
-                    }
-                });
+            return _context.Todos
+                .Include(t => t.Category);  // Load the associated category
 
-            return todos;
         }
 
+        
 
 
-
-        //public IQueryable<Todo> GetAllTodos()
-        //{
-        //    return _context.Todos
-        //       .Include(t => t.Category)
-        //       .ThenInclude(c => c.Todos);
-
-
-        //}
         public void AddTodo(Todo todo)
         {
-                if (todo == null)
-                {
-                    throw new ArgumentNullException(nameof(todo), "Todo cannot be null.");
-                }
-            // Add the validated Todo object to the database
-            _context.Todos.Add(todo);
-            // Save changes to persist the Todo object in the database
-             _context.SaveChanges();
+            if (todo == null)
+            {
+                throw new ArgumentNullException(nameof(todo), "Todo cannot be null.");
+            }
 
+            // Check if the category with the given ID exists
+            var category = _context.Categories.FirstOrDefault(c => c.Id == todo.CategoryId);
+            if (category == null)
+            {
+                // If the category does not exist, throw an exception or handle it differently
+                throw new ArgumentException($"Category with ID {todo.CategoryId} does not exist.");
+            }
+
+            // Link the category to the Todo
+            todo.Category = category;
+
+            // Add the Todo to the context
+            _context.Todos.Add(todo);
+
+            // Save the changes to the database
+            _context.SaveChanges();
         }
 
 
@@ -70,32 +55,27 @@ namespace TodoApplikasjonAPIEntityDelTre.Repositories
         public Todo GetTodoById(int id)
         {
             return _context.Todos
-                
                 .Include(t => t.Category)
                 .FirstOrDefault(b => b.Id == id) ?? new Todo();
-
         }
 
         public void UpdateTodo(Todo todo)
         {
-            _context.Todos.Update(todo); // Marque l'entité book comme modifiée pour la mise à jour
-            _context.SaveChanges();      // Applique les changements à la base de données
+            _context.Todos.Update(todo); // Mark the entity as modified for updating
+            _context.SaveChanges();      // Apply changes to the database
         }
-
 
         public void DeleteTodo(int id)
-        { 
-            var deleteBook = GetTodoById(id);
-            if (deleteBook != null)
+        {
+            var deleteTodo = GetTodoById(id);
+            if (deleteTodo != null)
             {
-                _context.Todos.Remove(deleteBook);
+                _context.Todos.Remove(deleteTodo);
                 _context.SaveChanges();
-
             }
-
         }
 
-        //Filtrage
+        // Filtrage
         // Fetches todos filtered by category
         public IQueryable<Todo> GetTodosByCategory(int categoryId)
         {
@@ -113,7 +93,5 @@ namespace TodoApplikasjonAPIEntityDelTre.Repositories
         {
             return _context.Todos.Where(t => t.IsCompleted == true);
         }
-
-
     }
 }

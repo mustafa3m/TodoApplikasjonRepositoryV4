@@ -47,39 +47,26 @@ namespace TodoApplikasjonAPIEntityDelTre.Controllers
             return Ok(todo);
         }
 
-        /// <summary>
-        /// Create a new Todo item.
-        /// </summary>
-        /// <param name="todo">The Todo item to create.</param>
+        ///// <summary>
+        ///// Create a new Todo item.
+        ///// </summary>
+        ///// <param name="todo">The Todo item to create.</param>
+    
         [HttpPost]
         public IActionResult CreateTodo(Todo todo)
         {
-
-            _todoService.AddNewTodo(todo);
-            return CreatedAtAction(nameof(GetTodoById), new { id = todo.Id }, todo);
-            //// Check if the provided Todo object is null
-            //if (todo == null)
-            //{
-            //    return BadRequest("The Todo object cannot be null.");
-            //}
-
-            //// Validate the model state
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
-
-            //try
-            //{
-            //    _todoService.AddNewTodo(todo);
-            //    return CreatedAtAction(nameof(GetTodoById), new { id = todo.Id }, todo);
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine($"Error adding Todo: {ex.Message}");
-            //    return StatusCode(500, "An error occurred while processing your request.");
-            //}
+            try
+            {
+                _todoService.AddNewTodo(todo);
+                return CreatedAtAction(nameof(GetTodoById), new { id = todo.Id }, todo);
+            }
+            catch (ArgumentException ex)
+            {
+                // Retourner une erreur 400 si la catégorie n'existe pas
+                return BadRequest(ex.Message);
+            }
         }
+
 
         /// <summary>
         /// Update an existing Todo item.
@@ -165,156 +152,3 @@ namespace TodoApplikasjonAPIEntityDelTre.Controllers
     }
 }
 
-
-/*
-  using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TodoApplikasjonAPIEntityDelTre.Models;
-using TodoApplikasjonAPIEntityDelTre.Services;
-
-
-/// <summary>
-/// //
-/// </summary>
-
-
-
-
-namespace TodoApplikasjonAPIEntityDelTre.Controllers
-{
-    
-    [ApiController]
-    [Route("api/[controller]")]
-    public class TodoManagementController : ControllerBase
-    {
-        private readonly ITodoService _todoService;
-
-        public TodoManagementController(ITodoService todoService)
-        {
-            _todoService = todoService;
-        }
-
-        [HttpGet]
-        public IActionResult GetAllTodos() => Ok(_todoService.FetchAllTodos());// Fetches all Todos.
-
-        [HttpGet("id")]
-
-        public IActionResult GetTodoById(int id)
-        {
-            var todo = _todoService.FindTodoById(id); // Fetches a todo by ID.
-            if (todo == null) NotFound();
-
-            return Ok(todo);
-        }
-
-        
-
-       
-
-
-
-        // POST: api/todo
-        [HttpPost]
-        public IActionResult CreateTodo([FromBody] Todo todo)
-        {
-            // Check if the todo is null
-            if (todo == null)
-            {
-                return BadRequest("Todo cannot be null.");
-            }
-
-            // Validate model state
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);  // Return validation errors if the model is invalid
-            }
-
-            try
-            {
-                // Add the new Todo
-                _todoService.AddNewTodo(todo);
-                // Return Created response with the created todo
-                return CreatedAtAction(nameof(GetAllTodos), new { id = todo.Id }, todo);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception (optional)
-                Console.WriteLine($"Error adding Todo: {ex.Message}");
-                return StatusCode(500, "An error occurred while processing your request.");  // Return 500 if there's a server error
-            }
-        }
-
-        // PUT: api/todo/{id}
-        [HttpPut("{id}")]
-        public IActionResult UpdateTodo(int id, [FromBody] Todo newTodo)
-        {
-            // Check if the ID in the URL matches the one in the body
-            if (id != newTodo.Id)
-            {
-                return BadRequest("Route ID does not match Todo ID.");
-            }
-
-            try
-            {
-                // Update the Todo in the service
-                _todoService.ModifyTodo(id, newTodo);
-                // Return 204 No Content, indicating successful update
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();  // If the item is not found, return 404 Not Found
-            }
-            catch (Exception ex)
-            {
-                // Log the exception (optional)
-                Console.WriteLine($"Error updating Todo: {ex.Message}");
-                return StatusCode(500, "An error occurred while processing your request.");  // Return 500 if there's a server error
-            }
-        }
-
-
-
-
-
-
-
-        //[HttpPut("{id}")]
-        //public IActionResult UpdateTodo(int id, Todo newTodo)
-        //{
-        //    try
-        //    {
-        //        // Call ModifyTodo to update and save automatically in the service
-        //        _todoService.ModifyTodo(id, newTodo);
-        //        return NoContent();  // Return 204 No Content, indicating successful update without additional data
-        //    }
-        //    catch (KeyNotFoundException)
-        //    {
-        //        return NotFound();  // If the item is not found, return 404 Not Found
-        //    }
-        //}
-
-        [HttpDelete("{id}")]
-        public IActionResult DeleteTodo(int id)
-        {
-            try
-            {
-                // Call RemoveTodo to delete and save directly in the service
-                _todoService.RemoveTodo(id);// Removes the todo
-                return Ok();  // Return 200 OK
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();  // If the item is not found, return 404 Not Found
-            }
-        }
-
-
-
-
-
-
-    }
-}
-
-*/

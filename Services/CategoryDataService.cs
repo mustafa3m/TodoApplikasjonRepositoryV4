@@ -8,14 +8,14 @@ using TodoApplikasjonAPIEntityDelTre.Repositories;
 
 namespace TodoApplikasjonAPIEntityDelTre.Services
 {
-    public class CategoryService : ICategoryService
+    public class CategoryDataService : ICategoryDataService
     {
         
 
         private readonly ICategoryDataRepository _categoryDataRepository;
 
 
-        public CategoryService(ICategoryDataRepository categoryDataRepository)
+        public CategoryDataService(ICategoryDataRepository categoryDataRepository)
         {
             _categoryDataRepository = categoryDataRepository;
         }

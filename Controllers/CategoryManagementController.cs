@@ -2,6 +2,7 @@
 using TodoApplikasjonAPIEntityDelTre.Models;
 using TodoApplikasjonAPIEntityDelTre.Services;
 using TodoApplikasjonAPIEntityDelTre.Repositories;
+using Serilog;
 
 namespace TodoApplikasjonAPIEntityDelTre.Controllers
 {
@@ -9,26 +10,32 @@ namespace TodoApplikasjonAPIEntityDelTre.Controllers
     [Route("api/[controller]")]
     public class CategoryManagementController : ControllerBase
     {
-        private readonly ICategoryService _CategoryService;
+        private readonly ICategoryDataService _CategoryDataService;
 
-        public CategoryManagementController(ICategoryService CategoryService)
+        public CategoryManagementController(ICategoryDataService CategoryService)
         {
-            _CategoryService = CategoryService;
+            _CategoryDataService = CategoryService;
         }
+
+        
 
         [HttpGet]
         public IActionResult GetAllCategories()
         {
-            var categories = _CategoryService.FetchAllCategories();
+            var categories = _CategoryDataService.FetchAllCategories();
             return Ok(categories);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetCategory(int id)
         {
-            var category = _CategoryService.FindCategoryById(id);
+            var category = _CategoryDataService.FindCategoryById(id);
             if (category == null)
+            {
+                Log.Information("category er null!");
                 return NotFound();
+            }
+                
             return Ok(category);
         }
 
@@ -47,7 +54,7 @@ namespace TodoApplikasjonAPIEntityDelTre.Controllers
                 return BadRequest(ModelState);
             }
 
-            _CategoryService.AddNewCategory(category);
+            _CategoryDataService.AddNewCategory(category);
             Console.WriteLine($"Category {category.Name} created with ID {category.Id}.");
             return CreatedAtAction(nameof(GetCategory), new { id = category.Id }, category);
         }
@@ -62,14 +69,14 @@ namespace TodoApplikasjonAPIEntityDelTre.Controllers
             if (id != category.Id)
                 return BadRequest();
 
-            _CategoryService.ModifyCategory(id, category);
+            _CategoryDataService.ModifyCategory(id, category);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteCategory(int id)
         {
-            _CategoryService.RemoveCategory(id);
+            _CategoryDataService.RemoveCategory(id);
             return NoContent();
         }
     }
